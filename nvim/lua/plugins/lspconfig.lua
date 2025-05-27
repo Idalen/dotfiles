@@ -5,44 +5,40 @@ return {
     opts = {
       ---@type lspconfig.options
       servers = {
-        pyright = {},
+        -- Go
+        gopls = {},
+
+        -- Lua
+        lua_ls = {
+          settings = {
+            Lua = {
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+              diagnostics = {
+                globals = { "vim" }, -- Avoid "undefined global vim" warning
+              },
+            },
+          },
+        },
+
+        -- C++
+        clangd = {},
       },
-    },
-    {
-      "neovim/nvim-lspconfig",
-      dependencies = {
-        "jose-elias-alvarez/typescript.nvim",
-        init = function()
-          require("lazyvim.util").lsp.on_attach(function(_, buffer)
-            vim.keymap.set(
-              "n",
-              "<leader>co",
-              "TypescriptOrganizeImports",
-              { buffer = buffer, desc = "Organize Imports" }
-            )
-            vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-          end)
+
+      --- Optional: Additional server-specific setup
+      setup = {
+        gopls = function(_, opts)
+          -- Optional custom setup for gopls
+          return false -- return false to proceed with default setup
         end,
-      },
-      ---@class PluginLspOpts
-      opts = {
-        ---@type lspconfig.options
-        servers = {
-          -- tsserver will be automatically installed with mason and loaded with lspconfig
-          tsserver = {},
-        },
-        -- you can do any additional lsp server setup here
-        -- return true if you don't want this server to be setup with lspconfig
-        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-        setup = {
-          -- example to setup with typescript.nvim
-          tsserver = function(_, opts)
-            require("typescript").setup({ server = opts })
-            return true
-          end,
-          -- Specify * to use this function as a fallback for any server
-          -- ["*"] = function(server, opts) end,
-        },
+        lua_ls = function(_, opts)
+          -- Optional custom setup for lua_ls
+          return false
+        end,
+        clangd = function(_, opts)
+          -- Optional custom setup for clangd
+          return false
+        end,
       },
     },
   },
