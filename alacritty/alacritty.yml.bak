@@ -1,0 +1,15 @@
+
+font:
+  normal:
+    family: "CaskaydiaCove NF"
+    style: Regular
+  bold:
+    family: "CaskaydiaCove NF"
+    style: Bold
+  italic:
+    family: "CaskaydiaCove NF"
+    style: Italic
+  bold_italic:
+    family: "CaskaydiaCove NF"
+    style: Bold Italic
+  size: 12
