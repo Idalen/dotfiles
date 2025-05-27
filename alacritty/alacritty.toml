@@ -1,3 +1,15 @@
+[env]
+TERM = "xterm-256color"
+
+[general]
+import = [
+    "~/.config/alacritty/themes/themes/kanagawa_wave.toml"
+]
+
+[terminal.shell]
+program = "/bin/zsh"
+args = ["-1"]
+
 [font]
 size = 12
 
@@ -16,3 +28,29 @@ style = "Italic"
 [font.normal]
 family = "CaskaydiaCove NF"
 style = "Regular"
+
+[window]
+dynamic_title = true
+
+[window.dimensions]
+columns = 0
+lines = 0
+
+[window.position]
+x = 0
+y = 0
+
+[window.padding]
+x = 25
+y = 15
+
+#opacity = 1.0
+#dynamic_padding = false
+#decorations = "none"
+# startup_mode = "SimpleFullscreen"
+
+[scrolling]
+history = 50000
+multiplier = 3
+
+

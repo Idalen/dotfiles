@@ -74,9 +74,16 @@ return {
     end,
   },
   {
+    "thesimonho/kanagawa-paper.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+  {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "rose-pine",
+      colorscheme = "kanagawa-paper",
+      --colorscheme = "rose-pine",
       --colorscheme = "tokyonight",
       --colorscheme = "gruvbox",
     },
