@@ -23,6 +23,15 @@ return {
 
         -- C++
         clangd = {},
+
+        bashls = {
+          filetypes = { "sh", "zsh", "bash" },
+          settings = {
+            bashIde = {
+              globPattern = "**/*@(.sh|.inc|.bash|.command|.zsh)",
+            },
+          },
+        },
       },
 
       --- Optional: Additional server-specific setup

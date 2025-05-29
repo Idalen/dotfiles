@@ -10,6 +10,7 @@ return {
         -- Shell
         "shellcheck",
         "shfmt",
+        "bash-language-server",
 
         -- Python
         "flake8",

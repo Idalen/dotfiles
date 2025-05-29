@@ -8,6 +8,9 @@ return {
     formatters_by_ft = {
       go = { "goimports", "gofmt" },
       lua = { "stylua" },
+      sh = { "shfmt" },
+      bash = { "shfmt" },
+      zsh = { "shfmt" },
     },
   },
 }
