@@ -54,3 +54,26 @@ history = 50000
 multiplier = 3
 
 
+[keyboard]
+bindings = [
+  # Copy (Ctrl+Shift+C)
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+
+  # Paste (Ctrl+Shift+V)
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+
+  # New window (Ctrl+Shift+N)
+  { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" },
+
+  # Quit (Ctrl+Shift+Q)
+  { key = "Q", mods = "Control|Shift", action = "Quit" },
+
+  # Increase font size (Ctrl + =)
+  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
+
+  # Decrease font size (Ctrl + -)
+  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+
+  # Reset font size (Ctrl + 0)
+  { key = "Key0", mods = "Control", action = "ResetFontSize" }
+]
