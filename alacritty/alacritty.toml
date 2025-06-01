@@ -8,7 +8,7 @@ import = [
 
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-1"]
+args = ["--login"]
 
 [font]
 size = 12
