@@ -4,6 +4,9 @@ fi
 
 export PATH="$HOME/go/bin:$PATH"
 
+# Show timestamp when the prompt is drawn (i.e. after each command)
+PROMPT='%F{#787c99}%D{%y.%m.%d %H:%M:%S}%f %F{#f7768e}%~%f %# '
+
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
