@@ -3,7 +3,7 @@ return {
 	build = ":TSUpdate",
 	config = function()
 		require("nvim-treesitter.configs").setup({
-			ensure_installed = { "c", "lua", "vim", "python", "rust" }, -- Languages to always install
+			ensure_installed = { "c", "lua", "vim", "python", "rust", "bash" }, -- Languages to always install
 			sync_install = false,                  -- Install parsers asynchronously
 			auto_install = true,                   -- Automatically install missing parsers on buffer open
 
