@@ -4,6 +4,7 @@ return {
 	dependencies = {
 		'nvim-lua/plenary.nvim',
 		'tpope/vim-fugitive',
+		'nvim-tree/nvim-web-devicons',
 	},
 	config = function()
 		local telescope = require("telescope")
