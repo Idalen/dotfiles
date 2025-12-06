@@ -1,3 +1,4 @@
+-- colorscheme plugin
 return {
   {
     "folke/tokyonight.nvim",
