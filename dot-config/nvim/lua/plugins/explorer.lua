@@ -31,7 +31,23 @@ return {
 					mappings = {
 						["o"] = "open",
 					}
-				}
+				},
+
+				vim.api.nvim_create_user_command("ExplorerHere", function()
+					require("neo-tree.command").execute({
+						source = "filesystem",
+						position = "left",
+						reveal = true, -- focus the current file
+						toggle = true, -- open/close if already open
+						-- dir = vim.fn.expand("%:p:h"), -- optional: root the tree at the file's dir
+					})
+				end, {}),
+				vim.keymap.set(
+					"n",
+					"<leader>e",
+					"<cmd>ExplorerHere<CR>",
+					{ desc = "File explorer (focus current file)" }
+				)
 			})
 		end,
 	},

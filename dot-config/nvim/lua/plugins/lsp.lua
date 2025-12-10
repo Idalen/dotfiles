@@ -14,6 +14,7 @@ return {
 					"pyright",
 					"ts_ls",
 					"clangd",
+					"bashls",
 				},
 				automatic_installation = true,
 			})
@@ -83,6 +84,48 @@ return {
 						gofumpt            = true, -- stricter formatting
 					},
 				},
+			}))
+
+			-- Bash
+			vim.lsp.config("bashls", with_defaults({
+				filetypes = { "sh", "bash", "zsh" },
+				cmd       = { "bash-language-server", "start" },
+				settings  = {
+					bashIde = {
+						globPattern = "*@(.sh|.bash|.zsh)",
+					},
+				},
+			}))
+
+			-- Python
+			vim.lsp.config("pyright", with_defaults({
+				settings = {
+					python = {
+						analysis = {
+							typeCheckingMode       = "basic", -- can be: off, basic, strict
+							autoImportCompletions  = true,
+							autoSearchPaths        = true,
+							diagnosticMode         = "workspace",
+							useLibraryCodeForTypes = true,
+							stubPath               = "typings",
+						},
+					},
+				},
+			}))
+			-- C / C++
+			vim.lsp.config("clangd", with_defaults({
+				cmd = {
+					"clangd",
+					"--background-index",
+					"--clang-tidy", -- enable Clang-Tidy lints
+					"--header-insertion=iwyu", -- "include what you use"
+					"--completion-style=detailed",
+					"--suggest-missing-includes",
+				},
+				on_attach = function(client, bufnr)
+					-- Disable default inline diagnostics if desired
+					client.server_capabilities.semanticTokensProvider = nil
+				end,
 			}))
 		end,
 	},

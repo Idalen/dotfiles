@@ -70,7 +70,11 @@ bindings = [
   { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
 
   # Reset font size (Ctrl + 0)
-  { key = "Key0", mods = "Control", action = "ResetFontSize" }
+  { key = "Key0", mods = "Control", action = "ResetFontSize" },
+	
+  # Navigate skipping words
+  { key = "Left",  mods = "Alt", chars = "\u001bb" },
+  { key = "Right", mods = "Alt", chars = "\u001bf" }
 ]
 
 [colors]
