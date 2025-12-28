@@ -15,6 +15,7 @@ return {
 					"ts_ls",
 					"clangd",
 					"bashls",
+					"julials"
 				},
 				automatic_installation = true,
 			})
