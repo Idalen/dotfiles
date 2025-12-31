@@ -4,6 +4,7 @@
 # https://github.com/FelixKratz/dotfiles
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
 
 ##### Colors (inspired by common sketchybar dotfiles) #####
 BLACK=0xff1e1e2e
@@ -47,6 +48,9 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
+source "$ITEM_DIR/apple.sh"
+source "$ITEM_DIR/aerospace.sh"
+
 ##### Adding Mission Control Space Indicators #####
 # Let's add some mission control spaces:
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
@@ -69,6 +73,8 @@ do
   sketchybar --add space space."$sid" left --set space."$sid" "${space[@]}"
 done
 
+
+
 ##### Adding Left Items #####
 # We add some regular items to the left side of the bar, where
 # only the properties deviating from the current defaults need to be set
@@ -77,9 +83,14 @@ sketchybar --add item chevron left \
            --set chevron icon= label.drawing=off icon.color="$ACCENT" \
                           background.drawing=off \
            --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+           --set front_app icon.drawing=on icon.font="sketchybar-app-font:Regular:16.0" \
+                          script="$PLUGIN_DIR/front_app.sh" \
                           label.color="$WHITE" \
            --subscribe front_app front_app_switched
+
+source "$ITEM_DIR/temp.sh"
+source "$ITEM_DIR/ram.sh"
+source "$ITEM_DIR/network.sh"
 
 ##### Adding Right Items #####
 # In the same way as the left items we can add items to the right side.
@@ -92,20 +103,18 @@ sketchybar --add item chevron left \
 # volume is registered. More info about the event system can be found here:
 # https://felixkratz.github.io/SketchyBar/config/events
 
-sketchybar --add item wifi_info right \
-           --set wifi_info update_freq=3 icon= script="$PLUGIN_DIR/wifi_info.sh" \
-                       click_script="open 'x-apple.systempreferences:com.apple.ControlCenter-Settings.extension?Wi-Fi'" \
-                       background.color="$ITEM_BG" \
-           --add item clock right \
+#source "$ITEM_DIR/calendar.sh"
+#source "$ITEM_DIR/input_source.sh"
+source "$ITEM_DIR/wifi.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/music.sh"
+
+sketchybar --add item clock right \
            --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
                        background.color="$ITEM_BG" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" background.color="$ITEM_BG" \
-           --subscribe volume volume_change \
-           --add item battery right \
-           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
-                        background.color="$ITEM_BG" \
-           --subscribe battery system_woke power_source_change
+           --subscribe volume volume_change
 
 
 sketchybar --add bracket left_group space.1 space.2 space.3 space.4 space.5 \
@@ -115,10 +124,12 @@ sketchybar --add bracket left_group space.1 space.2 space.3 space.4 space.5 \
                              background.corner_radius=10 background.padding_left=6 \
                              background.padding_right=6
 
-sketchybar --add bracket right_group wifi_info volume battery clock \
+sketchybar --add bracket right_group volume battery clock \
            --set right_group background.color="$ITEM_BG" background.height=28 \
                              background.corner_radius=10 background.padding_left=6 \
                              background.padding_right=6
+
+
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
