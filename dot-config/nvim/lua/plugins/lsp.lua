@@ -15,7 +15,8 @@ return {
 					"ts_ls",
 					"clangd",
 					"bashls",
-					"julials"
+					"julials",
+					"terraformls"
 				},
 				automatic_installation = true,
 			})
@@ -25,10 +26,19 @@ return {
 					return { noremap = true, silent = true, buffer = bufnr, desc = desc }
 				end
 
-				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+				local has_telescope, telescope = pcall(require, "telescope.builtin")
+
+				if has_telescope then
+					vim.keymap.set("n", "gd", telescope.lsp_definitions, opts("Go to definition"))
+					vim.keymap.set("n", "gi", telescope.lsp_implementations, opts("Implementation"))
+					vim.keymap.set("n", "gr", telescope.lsp_references, opts("References"))
+				else
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Implementation"))
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
+				end
+
 				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
-				vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Implementation"))
-				vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
 
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover"))
 				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts("Rename"))
@@ -112,6 +122,11 @@ return {
 						},
 					},
 				},
+			}))
+
+			-- Terraform
+			vim.lsp.config("terraformls", with_defaults({
+				filetypes = { "terraform", "tf", "terraform-vars" },
 			}))
 			-- C / C++
 			vim.lsp.config("clangd", with_defaults({

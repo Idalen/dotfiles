@@ -18,7 +18,9 @@ return {
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help" })
 
 		vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Git commits" })
-		vim.keymap.set("n", "<leader>gb", builtin.git_branches, { desc = "Git branches" })
+		vim.keymap.set("n", "<leader>gb", function()
+			vim.cmd("Git blame --first-parent")
+		end, { desc = "Git blame (first-parent)" })
 		vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Git status" })
 	end
 }
