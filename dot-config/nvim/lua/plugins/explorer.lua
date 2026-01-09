@@ -8,6 +8,7 @@ return {
 			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
+			local events = require("neo-tree.events")
 			require("neo-tree").setup({
 				sort_function = function(a, b)
 					-- Always put directories before files (optional)
@@ -50,6 +51,28 @@ return {
 					"<cmd>ExplorerHere<CR>",
 					{ desc = "File explorer (focus current file)" }
 				)
+			})
+
+			events.subscribe({
+				event = events.FILE_OPENED,
+				handler = function()
+					local listed = vim.fn.getbufinfo({ buflisted = 1 })
+					local non_tree_count = 0
+					for _, info in ipairs(listed) do
+						if vim.bo[info.bufnr].filetype ~= "neo-tree" then
+							non_tree_count = non_tree_count + 1
+						end
+					end
+					if non_tree_count == 1 then
+						for _, win in ipairs(vim.api.nvim_list_wins()) do
+							local buf = vim.api.nvim_win_get_buf(win)
+							if vim.bo[buf].filetype == "neo-tree" then
+								vim.api.nvim_win_close(win, true)
+								break
+							end
+						end
+					end
+				end,
 			})
 		end,
 	},
