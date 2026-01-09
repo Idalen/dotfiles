@@ -21,9 +21,31 @@ return {
 				automatic_installation = true,
 			})
 
+			local hover_group = vim.api.nvim_create_augroup("LspHoverPreview", { clear = false })
+
+			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+				border = "rounded",
+				focusable = false,
+				close_events = { "CursorMoved", "InsertEnter", "BufLeave" },
+			})
+
 			local on_attach = function(_, bufnr)
 				local opts = function(desc)
 					return { noremap = true, silent = true, buffer = bufnr, desc = desc }
+				end
+
+				if not vim.b.lsp_hover_preview_set then
+					vim.b.lsp_hover_preview_set = true
+					vim.api.nvim_create_autocmd("CursorHold", {
+						group = hover_group,
+						buffer = bufnr,
+						callback = function()
+							if vim.fn.pumvisible() == 1 then
+								return
+							end
+							vim.lsp.buf.hover()
+						end,
+					})
 				end
 
 				local has_telescope, telescope = pcall(require, "telescope.builtin")
@@ -139,6 +161,7 @@ return {
 					"--suggest-missing-includes",
 				},
 				on_attach = function(client, bufnr)
+					defaults.on_attach(client, bufnr)
 					-- Disable default inline diagnostics if desired
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
