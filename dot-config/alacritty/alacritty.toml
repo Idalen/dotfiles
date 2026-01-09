@@ -9,19 +9,19 @@ args = ["--login"]
 size = 13
 
 [font.normal]
-family = "CaskaydiaCove Nerd Font"
+family = "FiraCode Nerd Font"
 style = "Regular"
 
 [font.bold]
-family = "CaskaydiaCove Nerd Font"
+family = "FiraCode Nerd Font"
 style = "Bold"
 
 [font.italic]
-family = "CaskaydiaCove Nerd Font"
+family = "FiraCode Nerd Font"
 style = "Italic"
 
 [font.bold_italic]
-family = "CaskaydiaCove Nerd Font"
+family = "FiraCode Nerd Font"
 style = "Bold Italic"
 
 [window]

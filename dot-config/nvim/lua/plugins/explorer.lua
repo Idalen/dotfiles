@@ -28,6 +28,8 @@ return {
 					return a.path:lower() < b.path:lower()
 				end,
 				window = {
+					position = "left",
+					width = 32,
 					mappings = {
 						["o"] = "open",
 					}
