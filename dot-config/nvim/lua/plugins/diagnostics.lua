@@ -1,7 +1,18 @@
 return {
   "folke/trouble.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  opts = {}, -- default config is fine to start
+  opts = {
+    modes = {
+      diagnostics = {
+        preview = {
+          type = "split",
+          relative = "win",
+          position = "right",
+          size = 0.4,
+        },
+      },
+    },
+  },
   keys = {
     {
       "<leader>xx",
@@ -25,4 +36,3 @@ return {
     },
   },
 }
-

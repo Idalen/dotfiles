@@ -150,6 +150,14 @@ return {
 			vim.lsp.config("terraformls", with_defaults({
 				filetypes = { "terraform", "tf", "terraform-vars" },
 			}))
+
+			-- Julia (mason's julia-lsp wrapper requires an explicit environment path)
+			vim.lsp.config("julials", with_defaults({
+				cmd = {
+					"julia-lsp",
+					vim.fn.expand("~/.julia/environments/nvim-lspconfig"),
+				},
+			}))
 			-- C / C++
 			vim.lsp.config("clangd", with_defaults({
 				cmd = {
@@ -166,6 +174,18 @@ return {
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
 			}))
+
+			-- Start servers (new API requires explicit enable)
+			vim.lsp.enable({
+				"lua_ls",
+				"gopls",
+				"pyright",
+				"ts_ls",
+				"clangd",
+				"bashls",
+				"julials",
+				"terraformls",
+			})
 		end,
 	},
 

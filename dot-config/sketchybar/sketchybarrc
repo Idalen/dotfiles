@@ -88,9 +88,6 @@ sketchybar --add item chevron left \
                           label.color="$WHITE" \
            --subscribe front_app front_app_switched
 
-source "$ITEM_DIR/temp.sh"
-source "$ITEM_DIR/ram.sh"
-source "$ITEM_DIR/network.sh"
 
 ##### Adding Right Items #####
 # In the same way as the left items we can add items to the right side.
