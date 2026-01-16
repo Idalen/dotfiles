@@ -1,4 +1,5 @@
 local group = vim.api.nvim_create_augroup("StartupCleanup", { clear = true })
+local diag_group = vim.api.nvim_create_augroup("DiagnosticsHover", { clear = true })
 
 local function is_empty_unnamed_buffer(buf)
 	if vim.api.nvim_buf_get_name(buf) ~= "" then
@@ -28,5 +29,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
 		if vim.fn.argc() == 1 and vim.fn.isdirectory(arg) == 1 then
 			vim.schedule(cleanup_empty_buffers)
 		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+	group = diag_group,
+	callback = function()
+		vim.diagnostic.open_float(nil, {
+			focusable = false,
+			close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+			border = "rounded",
+			source = "if_many",
+			scope = "cursor",
+		})
 	end,
 })

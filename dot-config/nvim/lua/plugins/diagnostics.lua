@@ -2,8 +2,16 @@ return {
   "folke/trouble.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
+    focus = true,
     modes = {
       diagnostics = {
+        win = {
+          type = "float",
+          relative = "editor",
+          border = "rounded",
+          position = "center",
+          size = { width = 0.8, height = 0.7 },
+        },
         preview = {
           type = "split",
           relative = "win",
@@ -16,13 +24,13 @@ return {
   keys = {
     {
       "<leader>xx",
-      "<cmd>Trouble diagnostics toggle<cr>",
-      desc = "Diagnostics (workspace)",
+      "<cmd>Telescope diagnostics line_width=full<cr>",
+      desc = "Diagnostics (workspace, preview)",
     },
     {
       "<leader>xX",
-      "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-      desc = "Diagnostics (current file)",
+      "<cmd>Telescope diagnostics bufnr=0 line_width=full<cr>",
+      desc = "Diagnostics (current file, preview)",
     },
     {
       "<leader>xs",
