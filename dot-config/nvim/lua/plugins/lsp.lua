@@ -43,6 +43,10 @@ return {
 							if vim.fn.pumvisible() == 1 then
 								return
 							end
+							local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+							if #vim.diagnostic.get(0, { lnum = line }) > 0 then
+								return
+							end
 							vim.lsp.buf.hover()
 						end,
 					})
