@@ -22,6 +22,7 @@ return {
 			})
 
 			local hover_group = vim.api.nvim_create_augroup("LspHoverPreview", { clear = false })
+			local highlight_group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = false })
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 				border = "rounded",
@@ -29,7 +30,7 @@ return {
 				close_events = { "CursorMoved", "InsertEnter", "BufLeave" },
 			})
 
-			local on_attach = function(_, bufnr)
+			local on_attach = function(client, bufnr)
 				local opts = function(desc)
 					return { noremap = true, silent = true, buffer = bufnr, desc = desc }
 				end
@@ -51,6 +52,81 @@ return {
 						end,
 					})
 				end
+
+				if client and client.server_capabilities.documentHighlightProvider and not vim.b.lsp_document_highlight_set then
+					vim.b.lsp_document_highlight_set = true
+					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+						group = highlight_group,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.document_highlight()
+						end,
+					})
+					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+						group = highlight_group,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.clear_references()
+						end,
+					})
+				end
+
+				local function jump_to_highlight(direction)
+					local params = vim.lsp.util.make_position_params()
+					vim.lsp.buf_request_all(0, "textDocument/documentHighlight", params, function(responses)
+						local highlights = {}
+						for _, resp in pairs(responses) do
+							if resp.result then
+								for _, hl in ipairs(resp.result) do
+									local start = hl.range.start
+									table.insert(highlights, { start.line, start.character })
+								end
+							end
+						end
+						if #highlights == 0 then
+							return
+						end
+						table.sort(highlights, function(a, b)
+							if a[1] == b[1] then
+								return a[2] < b[2]
+							end
+							return a[1] < b[1]
+						end)
+
+						local cur = vim.api.nvim_win_get_cursor(0)
+						local cur_line = cur[1] - 1
+						local cur_col = cur[2]
+						local target
+
+						if direction == "next" then
+							for _, pos in ipairs(highlights) do
+								if pos[1] > cur_line or (pos[1] == cur_line and pos[2] > cur_col) then
+									target = pos
+									break
+								end
+							end
+							target = target or highlights[1]
+						else
+							for i = #highlights, 1, -1 do
+								local pos = highlights[i]
+								if pos[1] < cur_line or (pos[1] == cur_line and pos[2] < cur_col) then
+									target = pos
+									break
+								end
+							end
+							target = target or highlights[#highlights]
+						end
+
+						vim.api.nvim_win_set_cursor(0, { target[1] + 1, target[2] })
+					end)
+				end
+
+				vim.keymap.set("n", "gn", function()
+					jump_to_highlight("next")
+				end, opts("Next reference"))
+				vim.keymap.set("n", "gN", function()
+					jump_to_highlight("prev")
+				end, opts("Prev reference"))
 
 				local has_telescope, telescope = pcall(require, "telescope.builtin")
 
