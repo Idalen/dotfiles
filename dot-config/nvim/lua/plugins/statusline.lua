@@ -153,6 +153,17 @@ return {
 			},
 		}
 
+		ins_left {
+			function()
+				local ok, navic = pcall(require, "nvim-navic")
+				if not ok or not navic.is_available() then
+					return ""
+				end
+				return navic.get_location()
+			end,
+			color = { fg = colors.cyan, bg = "#202329" },
+		}
+
 		-- Insert mid section. You can make any number of sections in neovim :)
 		-- for lualine it's any number greater than 2
 		ins_left {
@@ -161,7 +172,8 @@ return {
 			end,
 		}
 
-		ins_left {
+		-- Add components to right sections
+		ins_right {
 			-- Lsp server name
 			function()
 				local msg = 'No Active Lsp'
@@ -181,8 +193,6 @@ return {
 			icon = ' LSP:',
 			color = { fg = '#555e88', gui = 'bold' },
 		}
-
-		-- Add components to right sections
 		ins_right {
 			'o:encoding', -- option component same as &encoding in viml
 			fmt = string.upper,

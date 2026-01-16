@@ -4,6 +4,7 @@ return {
 		dependencies = {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
+			"SmiteshP/nvim-navic",
 		},
 		config = function()
 			require("mason").setup()
@@ -23,6 +24,13 @@ return {
 
 			local hover_group = vim.api.nvim_create_augroup("LspHoverPreview", { clear = false })
 			local highlight_group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = false })
+			local has_navic, navic = pcall(require, "nvim-navic")
+			if has_navic then
+				navic.setup({
+					highlight = false,
+					separator = " > ",
+				})
+			end
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 				border = "rounded",
@@ -69,6 +77,10 @@ return {
 							vim.lsp.buf.clear_references()
 						end,
 					})
+				end
+
+				if has_navic and client.server_capabilities.documentSymbolProvider then
+					navic.attach(client, bufnr)
 				end
 
 				local function jump_to_highlight(direction)
