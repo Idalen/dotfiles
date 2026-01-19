@@ -33,3 +33,4 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 . "$HOME/.local/bin/env"
+alias pod="ssh danielvieira.devpod-bra"
