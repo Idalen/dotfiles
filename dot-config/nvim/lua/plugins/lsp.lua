@@ -13,7 +13,7 @@ return {
 					"lua_ls",
 					"gopls",
 					"pyright",
-					"ts_ls",
+					"tsserver",
 					"clangd",
 					"bashls",
 					"julials",
@@ -30,6 +30,15 @@ return {
 					highlight = false,
 					separator = " > ",
 				})
+			end
+
+			local orig_open_floating_preview = vim.lsp.util.open_floating_preview
+			vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+				opts = opts or {}
+				opts.focusable = false
+				opts.focus = false
+				opts.close_events = opts.close_events or { "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }
+				return orig_open_floating_preview(contents, syntax, opts, ...)
 			end
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -238,6 +247,15 @@ return {
 				},
 			}))
 
+			-- JavaScript / TypeScript
+			vim.lsp.config("tsserver", with_defaults({
+				settings = {
+					completions = {
+						completeFunctionCalls = true,
+					},
+				},
+			}))
+
 			-- Terraform
 			vim.lsp.config("terraformls", with_defaults({
 				filetypes = { "terraform", "tf", "terraform-vars" },
@@ -272,7 +290,7 @@ return {
 				"lua_ls",
 				"gopls",
 				"pyright",
-				"ts_ls",
+				"tsserver",
 				"clangd",
 				"bashls",
 				"julials",
