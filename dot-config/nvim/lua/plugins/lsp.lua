@@ -153,10 +153,12 @@ return {
 
 				if has_telescope then
 					vim.keymap.set("n", "gd", telescope.lsp_definitions, opts("Go to definition"))
+					vim.keymap.set("n", "gT", telescope.lsp_type_definitions, opts("Go to type definition"))
 					vim.keymap.set("n", "gi", telescope.lsp_implementations, opts("Implementation"))
 					vim.keymap.set("n", "gr", telescope.lsp_references, opts("References"))
 				else
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+					vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, opts("Go to type definition"))
 					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Implementation"))
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
 				end
