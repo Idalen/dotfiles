@@ -3,6 +3,9 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     focus = true,
+    keys = {
+      ["<cr>"] = "jump_close",
+    },
     modes = {
       diagnostics = {
         win = {
@@ -33,8 +36,8 @@ return {
       desc = "Diagnostics (current file, preview)",
     },
     {
-      "<leader>xs",
-      "<cmd>Trouble symbols toggle<cr>",
+      "<leader>s",
+      "<cmd>Trouble symbols toggle focus=true<cr>",
       desc = "Document Symbols",
     },
     {
