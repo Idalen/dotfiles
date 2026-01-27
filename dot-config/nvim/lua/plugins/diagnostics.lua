@@ -22,6 +22,14 @@ return {
           size = 0.4,
         },
       },
+      symbols = {
+        win = {
+          type = "split",
+          relative = "editor",
+          position = "right",
+          size = 0.5,
+        },
+      },
     },
   },
   keys = {
