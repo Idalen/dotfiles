@@ -3,19 +3,55 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 export PATH="$HOME/go/bin:$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
 
 # Set nvim as default editor
 export EDITOR="nvim"
 export VISUAL="nvim"
 
 # Show timestamp when the prompt is drawn (i.e. after each command)
-PROMPT='%F{#787c99}%D{%y.%m.%d %H:%M:%S}%f %F{#f7768e}%~%f %# '
+# Enable git branch info in prompt
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git*' formats ' %F{cyan}‹%b›%f'
+zstyle ':vcs_info:git*' actionformats ' %F{red}‹%b|%a›%f'
+setopt prompt_subst
+precmd() { vcs_info }
 
-# source cargo environment
-. "$HOME/.cargo/env"
+# Set prompt with timestamp, directory, git branch, and exit status
+PROMPT='%F{#787c99}%D{%a %d %b}%f %F{#7aa2f7}%D{%H:%M:%S}%f %F{#f7768e}%~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})%#%f '
+RPROMPT=''
+# Optional enhancements (uncomment to enable):
+# Show username@host if connected via SSH
+# [[ -n "$SSH_CONNECTION" ]] && PROMPT="%F{yellow}%n@%m%f $PROMPT"
+# Show number of background jobs
+# PROMPT="%(1j.%F{blue}[%j]%f .)$PROMPT"
+# Show battery status in RPROMPT (requires acpi)
+# RPROMPT='$(acpi -b 2>/dev/null | grep -Eo "[0-9]+%" | head -1)'
+# Alternative datetime formats (replace in PROMPT above):
+# %D{%Y-%m-%d %H:%M:%S}   # 2026-04-12 09:38:53
+# %D{%a %d %b %H:%M:%S}   # Sun 12 Apr 09:38:53
+# %D{%H:%M:%S}            # 09:38:53 (time only)
+# %D{%I:%M:%S %p}         # 09:38:53 AM (12-hour)
 
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source cargo environment if it exists
+if [[ -f "$HOME/.cargo/env" ]]; then
+    . "$HOME/.cargo/env"
+fi
+
+# zsh-autosuggestions
+if [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# zsh-syntax-highlighting
+if [[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 alias ls="eza --icons=always"
 eval "$(zoxide init zsh)"
@@ -32,5 +68,7 @@ setopt hist_verify
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
-. "$HOME/.local/bin/env"
+if [[ -f "$HOME/.local/bin/env" ]]; then
+    . "$HOME/.local/bin/env"
+fi
 alias pod="ssh danielvieira.devpod-bra"
