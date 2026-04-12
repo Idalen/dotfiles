@@ -1,1 +1,5 @@
 ^scripts$
+^README\.md$
+^\.stow-local-ignore$
+^\.git$
+^\..*

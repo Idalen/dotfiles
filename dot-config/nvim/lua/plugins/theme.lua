@@ -1,19 +1,19 @@
 -- colorscheme plugin
 return {
 	{
-		"folke/tokyonight.nvim",
+		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
-		opts = {
-			style = "night",
-			transparent = false,
-		},
+		config = function()
+			require("kanagawa").setup()
+			vim.cmd.colorscheme("kanagawa-wave")
+		end,
 	},
 
 	{
 		"LazyVim/LazyVim",
 		opts = {
-			colorscheme = "tokyonight",
+			colorscheme = "kanagawa-wave",
 		},
 	},
 }
