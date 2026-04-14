@@ -1,33 +1,48 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
-	dependecies = {
+	dependencies = {
 		"nvim-treesitter/nvim-treesitter-textobjects",
 	},
+	lazy = false,
 	build = ":TSUpdate",
 	config = function()
-		require("nvim-treesitter.configs").setup({
-			textobjects = {
-				move = {
-					enable = true,
-					set_jumps = true,
-					goto_next_start = {
-						["]m"] = "@function.outer",
-					},
-					goto_previous_start = {
-						["[m"] = "@function.outer",
-					},
+		local treesitter = require("nvim-treesitter")
+		treesitter.setup()
+		treesitter.install({ "c", "lua", "vim", "python", "rust", "bash", "terraform" })
+
+		-- Enable highlighting and indentation for installed parsers
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "c", "lua", "vim", "python", "rust", "bash", "terraform" },
+			callback = function()
+				-- Enable syntax highlighting
+				vim.treesitter.start()
+				-- Enable treesitter-based indentation
+				vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+			end,
+		})
+
+		-- Disable highlighting for yaml
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "yaml" },
+			callback = function()
+				-- Disable treesitter highlighting for yaml
+				vim.treesitter.stop()
+			end,
+		})
+
+		-- Configure textobjects
+		local textobjects = require("nvim-treesitter-textobjects")
+		textobjects.setup({
+			move = {
+				enable = true,
+				set_jumps = true,
+				goto_next_start = {
+					["]m"] = "@function.outer",
+				},
+				goto_previous_start = {
+					["[m"] = "@function.outer",
 				},
 			},
-
-			ensure_installed = { "c", "lua", "vim", "python", "rust", "bash", "terraform" }, -- Languages to always install
-			sync_install = false,                          -- Install parsers asynchronously
-			auto_install = true,                           -- Automatically install missing parsers on buffer open
-
-			highlight = {
-				enable = true, -- Enable Tree-sitter highlighting
-				disable = { "yaml" }, -- Languages to disable highlighting for
-			},
-			indent = { enable = true }, -- Enable Tree-sitter based indentation
 		})
 	end,
 }

@@ -13,7 +13,7 @@ return {
 					"lua_ls",
 					"gopls",
 					"pyright",
-					"tsserver",
+					"ts_ls",
 					"clangd",
 					"bashls",
 					"julials",
@@ -250,7 +250,7 @@ return {
 			}))
 
 			-- JavaScript / TypeScript
-			vim.lsp.config("tsserver", with_defaults({
+			vim.lsp.config("ts_ls", with_defaults({
 				settings = {
 					completions = {
 						completeFunctionCalls = true,
@@ -292,7 +292,7 @@ return {
 				"lua_ls",
 				"gopls",
 				"pyright",
-				"tsserver",
+				"ts_ls",
 				"clangd",
 				"bashls",
 				"julials",
