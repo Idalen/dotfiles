@@ -1,48 +1,24 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	dependencies = {
-		"nvim-treesitter/nvim-treesitter-textobjects",
-	},
-	lazy = false,
-	build = ":TSUpdate",
-	config = function()
-		local treesitter = require("nvim-treesitter")
-		treesitter.setup()
-		treesitter.install({ "c", "lua", "vim", "python", "rust", "bash", "terraform" })
-
-		-- Enable highlighting and indentation for installed parsers
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "c", "lua", "vim", "python", "rust", "bash", "terraform" },
-			callback = function()
-				-- Enable syntax highlighting
-				vim.treesitter.start()
-				-- Enable treesitter-based indentation
-				vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-			end,
-		})
-
-		-- Disable highlighting for yaml
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "yaml" },
-			callback = function()
-				-- Disable treesitter highlighting for yaml
-				vim.treesitter.stop()
-			end,
-		})
-
-		-- Configure textobjects
-		local textobjects = require("nvim-treesitter-textobjects")
-		textobjects.setup({
-			move = {
-				enable = true,
-				set_jumps = true,
-				goto_next_start = {
-					["]m"] = "@function.outer",
-				},
-				goto_previous_start = {
-					["[m"] = "@function.outer",
-				},
-			},
-		})
-	end,
+    "nvim-treesitter/nvim-treesitter",
+    version = false, -- Last release is way too old
+    build = ":TSUpdate",
+    -- event = { "BufReadPost", "BufNewFile" },
+    lazy = false, -- Keep false to ensure loading for Neo-tree
+    main = "nvim-treesitter.configs", -- Lazy handles the require logic here
+    branch = "master", -- Explicitly force the stable branch
+    opts = {
+        ensure_installed = { "lua", "vim", "vimdoc", "query", "python", "c", "cpp", "markdown", "markdown_inline", "csv", "json", "go"},
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+    },
+    -- Fallback config to handle edge cases
+    config = function(_, opts)
+        -- Protective call: If treesitter fails to load, don't crash neovim
+        local status_ok, configs = pcall(require, "nvim-treesitter.configs")
+        if not status_ok then
+            return
+        end
+        configs.setup(opts)
+    end,
 }
