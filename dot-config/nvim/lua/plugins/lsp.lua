@@ -17,7 +17,8 @@ return {
 					"clangd",
 					"bashls",
 					"julials",
-					"terraformls"
+					"terraformls",
+					"rust_analyzer"
 				},
 				automatic_installation = true,
 			})
@@ -41,11 +42,13 @@ return {
 				return orig_open_floating_preview(contents, syntax, opts, ...)
 			end
 
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-				border = "rounded",
-				focusable = false,
-				close_events = { "CursorMoved", "InsertEnter", "BufLeave" },
-			})
+			vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
+				config = config or {}
+				config.border = "rounded"
+				config.focusable = false
+				config.close_events = { "CursorMoved", "InsertEnter", "BufLeave" }
+				return vim.lsp.handlers.hover(_, result, ctx, config)
+			end
 
 			local on_attach = function(client, bufnr)
 				local opts = function(desc)
@@ -93,7 +96,7 @@ return {
 				end
 
 				local function jump_to_highlight(direction)
-					local params = vim.lsp.util.make_position_params()
+					local params = vim.lsp.util.make_position_params(nil, client.offset_encoding or "utf-16")
 					vim.lsp.buf_request_all(0, "textDocument/documentHighlight", params, function(responses)
 						local highlights = {}
 						for _, resp in pairs(responses) do
@@ -287,6 +290,15 @@ return {
 				end,
 			}))
 
+			-- Rust
+			vim.lsp.config("rust_analyzer", with_defaults({
+				settings = {
+					["rust-analyzer"] = {
+						checkOnSave = true,
+					},
+				},
+			}))
+
 			-- Start servers (new API requires explicit enable)
 			vim.lsp.enable({
 				"lua_ls",
@@ -297,6 +309,7 @@ return {
 				"bashls",
 				"julials",
 				"terraformls",
+				"rust_analyzer",
 			})
 		end,
 	},
