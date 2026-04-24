@@ -16,6 +16,7 @@ return {
           "bash",
           "terraform",
           "julia",
+          "html",
         },
         auto_install = true,
         highlight = true,
