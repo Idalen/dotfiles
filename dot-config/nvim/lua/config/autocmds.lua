@@ -51,3 +51,9 @@ vim.api.nvim_create_autocmd(
     command = "checktime",
   }
 )
+
+-- Ensure .proto files are detected
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.proto",
+  command = "set filetype=proto",
+})

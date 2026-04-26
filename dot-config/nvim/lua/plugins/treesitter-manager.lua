@@ -17,6 +17,7 @@ return {
           "terraform",
           "julia",
           "html",
+          "proto",
         },
         auto_install = true,
         highlight = true,

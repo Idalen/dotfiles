@@ -18,7 +18,8 @@ return {
 					"bashls",
 					"julials",
 					"terraformls",
-					"rust_analyzer"
+					"rust_analyzer",
+					"protols"
 				},
 				automatic_installation = true,
 			})
@@ -299,6 +300,9 @@ return {
 				},
 			}))
 
+			-- Protocol Buffers
+			vim.lsp.config("protols", with_defaults({}))
+
 			-- Start servers (new API requires explicit enable)
 			vim.lsp.enable({
 				"lua_ls",
@@ -310,6 +314,7 @@ return {
 				"julials",
 				"terraformls",
 				"rust_analyzer",
+				"protols",
 			})
 		end,
 	},

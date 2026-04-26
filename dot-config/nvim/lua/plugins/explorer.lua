@@ -5,7 +5,7 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
-			"nvim-tree/nvim-web-devicons",
+			"echasnovski/mini.icons",
 		},
 		config = function()
 			local events = require("neo-tree.events")
@@ -84,6 +84,12 @@ return {
 		},
 		config = function()
 			require("lsp-file-operations").setup()
+		end,
+	},
+	{
+		"echasnovski/mini.icons",
+		config = function()
+			require("mini.icons").mock_nvim_web_devicons()
 		end,
 	},
 	{
