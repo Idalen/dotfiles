@@ -2,6 +2,10 @@
 # Set default shell to zsh
 command = /bin/zsh -l -i
 
+# Font
+font-family = JetBrainsMonoNL Nerd Font
+font-size = 12
+
 # Window padding
 window-padding-x = 12
 window-padding-y = 10
