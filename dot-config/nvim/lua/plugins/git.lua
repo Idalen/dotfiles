@@ -28,4 +28,20 @@ return {
 		map("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "Undo stage hunk" })
 		map("n", "<leader>hb", gitsigns.toggle_current_line_blame, { desc = "Toggle line blame" })
 	end,
+	{
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles" },
+		keys = {
+			{ "<leader>gm", "<cmd>DiffviewOpen main...HEAD<CR>", desc = "Diff branch against main" },
+		},
+		config = function()
+			local dv = require("diffview")
+			dv.setup({
+				key_bindings = {
+					view = { q = "<Cmd>DiffviewClose<CR>" },
+					file_panel = { q = "<Cmd>DiffviewClose<CR>" },
+				},
+			})
+		end,
+	},
 }

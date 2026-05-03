@@ -18,6 +18,7 @@ return {
           "julia",
           "html",
           "proto",
+          "zig",
         },
         auto_install = true,
         highlight = true,
