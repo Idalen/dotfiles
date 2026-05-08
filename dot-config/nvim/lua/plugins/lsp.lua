@@ -21,6 +21,7 @@ return {
 					"rust_analyzer",
 					"protols",
 					"zls",
+					"vala_ls",
 				},
 				automatic_installation = true,
 			})
@@ -307,6 +308,11 @@ return {
 			-- Zig
 			vim.lsp.config("zls", with_defaults({}))
 
+			-- Vala
+			vim.lsp.config("vala_ls", with_defaults({
+				filetypes = { "vala", "vapi" },
+			}))
+
 			-- Start servers (new API requires explicit enable)
 			vim.lsp.enable({
 				"lua_ls",
@@ -320,6 +326,7 @@ return {
 				"rust_analyzer",
 				"protols",
 				"zls",
+				"vala_ls",
 			})
 		end,
 	},
