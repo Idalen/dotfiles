@@ -187,10 +187,16 @@ return {
 			}
 
 
-			-- helper: merge defaults into each server config
+			-- helper: merge defaults into each server config, chaining custom on_attach
 			local function with_defaults(opts)
 				opts = opts or {}
-				opts.on_attach = defaults.on_attach
+				local custom_attach = opts.on_attach
+				opts.on_attach = function(client, bufnr)
+					defaults.on_attach(client, bufnr)
+					if custom_attach then
+						custom_attach(client, bufnr)
+					end
+				end
 				opts.capabilities = defaults.capabilities
 				return opts
 			end
@@ -311,6 +317,19 @@ return {
 			-- Vala
 			vim.lsp.config("vala_ls", with_defaults({
 				filetypes = { "vala", "vapi" },
+				on_attach = function(client, bufnr)
+					-- Use uncrustify for formatting (vala_ls doesn't advertise formatting)
+					local uncrustify_cfg = vim.fn.expand("~/.config/uncrustify/vala.cfg")
+					vim.keymap.set("n", "<leader>f", function()
+						local ok = vim.fn.executable("uncrustify") == 1
+						if ok then
+							vim.cmd("%!uncrustify -c " .. uncrustify_cfg .. " -l vala 2>/dev/null")
+							vim.cmd("edit!")
+						else
+							vim.notify("uncrustify not installed — install it for Vala formatting", vim.log.levels.WARN)
+						end
+					end, { buffer = bufnr, desc = "Format (uncrustify)" })
+				end,
 			}))
 
 			-- Start servers (new API requires explicit enable)
