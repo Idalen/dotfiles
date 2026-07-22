@@ -6,16 +6,25 @@ return {
 			"nvim-neotest/nvim-nio",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-neotest/neotest-go",
+			"nvim-neotest/neotest-plenary",
+			"nvim-neotest/neotest-python",
+			"alfaix/neotest-gtest",
 		},
 		config = function()
 			local neotest = require("neotest")
 			neotest.setup({
+				output = {
+					open_on_run = false,
+				},
 				adapters = {
-					require("neotest-go")({
-						experimental = {
-							test_table = true,
-						},
+					require("neotest-go"),
+					require("neotest-plenary"),
+					require("neotest-python")({
+						dap = { justMyCode = false },
+						runner = "pytest",
+						python = vim.fn.expand("python3") or "python3",
 					}),
+					require("neotest-gtest").setup({}),
 				},
 			})
 
@@ -36,11 +45,8 @@ return {
 				neotest.run.stop()
 			end, "Test stop")
 			map("<leader>to", function()
-				neotest.output.open({ enter = true })
-			end, "Test output")
-			map("<leader>tO", function()
 				neotest.output_panel.toggle()
-			end, "Test output panel")
+			end, "Toggle test output")
 		end,
 	},
 }
