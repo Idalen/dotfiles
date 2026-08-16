@@ -8,5 +8,6 @@ return {
 	priority = 1000, -- load before LazyVim tries to use it
 	opts = {
 		explorer = { enabled = false },
+		statuscolumn = { enabled = true },
 	},
 }

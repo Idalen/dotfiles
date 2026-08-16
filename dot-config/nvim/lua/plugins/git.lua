@@ -16,7 +16,9 @@ return {
 			current_line_blame_opts = {
 				delay = 200,
 				virt_text_pos = "eol",
+				ignore_whitespace = false,
 			},
+			current_line_blame_formatter = "  <author>, <author_time:%Y-%m-%d> • <summary>",
 		})
 
 		local map = vim.keymap.set
