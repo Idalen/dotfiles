@@ -27,7 +27,7 @@ return {
         show_buffer_close_icons = false,
         show_close_icon = false,
         always_show_bufferline = true,
-        separator_style = { "padded_slant", "padded_slope" }, -- rounded powerline separators
+        separator_style = "thin", -- "slant" | "thick" | "thin" | { 'any', 'any' }
         indicator = { style = "underline" }, -- underline the active buffer instead of a solid box
 
         -- how to pick buffers when using :BufferLinePick

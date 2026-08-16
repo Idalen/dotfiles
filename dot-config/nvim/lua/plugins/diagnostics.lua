@@ -28,6 +28,9 @@ return {
           relative = "editor",
           position = "right",
           size = 0.5,
+          wo = {
+            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:TroubleCursorLine",
+          },
         },
       },
     },

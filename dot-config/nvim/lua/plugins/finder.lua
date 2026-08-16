@@ -13,6 +13,15 @@ return {
 		telescope.setup({
 			defaults = {
 				wrap_results = true,
+				layout_strategy = "horizontal",
+				layout_config = {
+					horizontal = {
+						prompt_position = "top",
+						preview_width = 0.55,
+					},
+				},
+				path_display = { "truncate" },
+				dynamic_preview_title = true,
 			},
 		})
 
