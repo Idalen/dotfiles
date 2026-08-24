@@ -21,7 +21,6 @@ return {
 					"rust_analyzer",
 					"protols",
 					"zls",
-					"vala_ls",
 				},
 				automatic_installation = true,
 			})
@@ -39,6 +38,9 @@ return {
 			local orig_open_floating_preview = vim.lsp.util.open_floating_preview
 			vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
 				opts = opts or {}
+				if opts.border == nil then
+					opts.border = "rounded"
+				end
 				opts.focusable = false
 				opts.focus = false
 				opts.close_events = opts.close_events or { "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }
@@ -314,24 +316,6 @@ return {
 			-- Zig
 			vim.lsp.config("zls", with_defaults({}))
 
-			-- Vala
-			vim.lsp.config("vala_ls", with_defaults({
-				filetypes = { "vala", "vapi" },
-				on_attach = function(client, bufnr)
-					-- Use uncrustify for formatting (vala_ls doesn't advertise formatting)
-					local uncrustify_cfg = vim.fn.expand("~/.config/uncrustify/vala.cfg")
-					vim.keymap.set("n", "<leader>f", function()
-						local ok = vim.fn.executable("uncrustify") == 1
-						if ok then
-							vim.cmd("%!uncrustify -c " .. uncrustify_cfg .. " -l vala 2>/dev/null")
-							vim.cmd("edit!")
-						else
-							vim.notify("uncrustify not installed — install it for Vala formatting", vim.log.levels.WARN)
-						end
-					end, { buffer = bufnr, desc = "Format (uncrustify)" })
-				end,
-			}))
-
 			-- Start servers (new API requires explicit enable)
 			vim.lsp.enable({
 				"lua_ls",
@@ -345,7 +329,6 @@ return {
 				"rust_analyzer",
 				"protols",
 				"zls",
-				"vala_ls",
 			})
 		end,
 	},

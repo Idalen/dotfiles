@@ -19,7 +19,6 @@ return {
           "html",
           "proto",
           "zig",
-          "vala",
         },
         auto_install = true,
         highlight = true,

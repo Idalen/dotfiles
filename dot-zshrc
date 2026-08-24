@@ -9,6 +9,9 @@ export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PAT
 export EDITOR="nvim"
 export VISUAL="nvim"
 
+# zk notebook
+export ZK_NOTEBOOK_DIR="$HOME/notes"
+
 # Show timestamp when the prompt is drawn (i.e. after each command)
 # Enable git branch info in prompt
 autoload -Uz vcs_info
