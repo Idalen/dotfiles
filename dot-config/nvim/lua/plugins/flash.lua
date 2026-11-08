@@ -1,5 +1,6 @@
 return {
 	"folke/flash.nvim",
+	commit = "b6346946d10d07998efee029fb0f7a593806d0cd",
 	event = "VeryLazy",
 	opts = {},
 	keys = {

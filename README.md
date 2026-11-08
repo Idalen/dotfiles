@@ -12,7 +12,7 @@ dotfiles/
 ├── dot-tmux.conf          # tmux configuration
 ├── dot-zshrc              # zsh configuration  
 └── dot-config/
-    ├── nvim/              # Neovim configuration (LazyVim based)
+    ├── nvim/              # Neovim configuration (lazy.nvim managed)
     └── ghostty/           # Ghostty terminal emulator config
 ```
 
@@ -99,12 +99,77 @@ If you prefer granular control or already have a `~/.config` directory with othe
 
 ## Neovim Dependencies
 
+### Markdown, math, and Mermaid previews
+
+Markview formats Markdown inside Neovim. `live-preview.nvim` opens a browser
+preview with KaTeX equations, Mermaid diagrams, live updates, and synchronized
+scrolling. It requires Neovim >= 0.10.1 and a modern browser.
+
+After restarting Neovim, let Lazy install the new plugin (or run `:Lazy install`).
+Open a Markdown file and use these normal-mode mappings:
+
+| Key | Action |
+| --- | --- |
+| `Space m r` | Toggle Markview previews |
+| `Space m s` | Toggle Markview split preview |
+| `Space m p` | Start browser preview (`:LivePreview start`) |
+| `Space m c` | Stop browser preview server (`:LivePreview close`) |
+
+Use `$...$` or `$$...$$` for math and fenced code blocks with the `mermaid`
+language for diagrams. Run `:checkhealth livepreview` to diagnose browser preview
+issues. For standalone `.tex` files, use VimTeX as described below.
+
+### LaTeX documents
+
+VimTeX compiles `.tex` documents with `latexmk`. `:Tv` displays the compiled PDF
+inside Neovim using Snacks in a vertical split. This requires Ghostty or Kitty
+and `pdftoppm` (`sudo apt install poppler-utils`).
+The preview uses a scratch buffer, so automatic file reloads cannot replace it
+with Snacks' cached single-page view.
+All PDF pages are rendered in order with their full margins. Close the split with `:q`.
+Pages fit the split width. Scroll through the document using `j`/`k`, Ctrl+d/u, or the
+mouse wheel (with Neovim mouse support enabled). Scroll position is preserved
+when the preview redraws, including when a rebuild changes the page count.
+After starting compilation with `:Tc` and opening the preview with `:Tv`, save
+the `.tex` file to rebuild. A file watcher refreshes the preview when the PDF
+changes, even with focus in the preview or another buffer. Updates are debounced
+to let file writes settle; the preview never moves focus.
+Install the external dependencies on Ubuntu/Debian:
+
+```bash
+sudo apt install latexmk texlive-latex-recommended texlive-latex-extra zathura zathura-pdf-poppler
+```
+
+Restart Neovim and run `:Lazy install`. Open a `.tex` file, then use:
+
+| Command | Default key | Action |
+| --- | --- | --- |
+| `:VimtexCompile` | `\ll` | Start/stop continuous compilation; rebuild after saving |
+| `:VimtexView` | `\lv` | Open the PDF at the source location |
+| `:VimtexErrors` | `\le` | Show compilation errors |
+| `:VimtexInfo` | `\li` | Inspect compiler and viewer configuration |
+
+These keys use the default local leader, backslash. Zathura opens in a separate
+window. Use Ctrl+left-click in the PDF to jump back to the source in Neovim.
+The current VimTeX release requires Neovim >= 0.12.4.
+
+Short commands: `:Tc` starts continuous compilation without toggling it off.
+`:Tv` toggles the document's preview split. When opening, it ensures compilation
+is running. Run it again from the source or preview to close the preview without
+stopping compilation.
+Save the `.tex` file to rebuild and refresh; use `:VimtexStop` to stop compilation.
+If the PDF has not been built yet, wait for compilation and run `:Tv` again.
+Compilation does not automatically launch an external viewer; `:VimtexView`
+still opens Zathura explicitly. Lowercase `:tc`
+remains the built-in abbreviation for `:tcd`.
+
 The Neovim configuration is built on [Lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager and uses the following GitHub repositories:
 
 ### Plugin Manager
 - **[folke/lazy.nvim](https://github.com/folke/lazy.nvim)** – Plugin manager that lazy-loads plugins for faster startup
 
 ### LSP & Language Support
+- **[lervag/vimtex](https://github.com/lervag/vimtex)** – LaTeX compilation and PDF viewer integration
 - **[neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)** – Configurations for Language Server Protocol (LSP) servers
 - **[williamboman/mason.nvim](https://github.com/williamboman/mason.nvim)** – Portable package manager for LSP servers, linters, formatters
 - **[williamboman/mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)** – Bridge between Mason and nvim-lspconfig
@@ -136,7 +201,7 @@ The Neovim configuration is built on [Lazy.nvim](https://github.com/folke/lazy.n
 
 ### Diagnostics & Troubleshooting
 - **[folke/trouble.nvim](https://github.com/folke/trouble.nvim)** – Pretty diagnostics, references, and quickfix lists
-- **[folke/snacks.nvim](https://github.com/folke/snacks.nvim)** – LazyVim dependency (required for LazyVim to function)
+- **[folke/snacks.nvim](https://github.com/folke/snacks.nvim)** – Status column UI
 
 ### Testing
 - **[nvim-neotest/neotest](https://github.com/nvim-neotest/neotest)** – Extensible testing framework
@@ -147,8 +212,6 @@ The Neovim configuration is built on [Lazy.nvim](https://github.com/folke/lazy.n
 - **[nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim)** – Utility library used by Telescope, Neo-tree, neotest
 - **[MunifTanjim/nui.nvim](https://github.com/MunifTanjim/nui.nvim)** – UI component library for Neo-tree
 - **[OXY2DEV/markview.nvim](https://github.com/OXY2DEV/markview.nvim)** – Markdown preview with split view toggle
-- **[LazyVim/LazyVim](https://github.com/LazyVim/LazyVim)** – Preconfigured Neovim setup (partially used for colorscheme configuration)
-
-### Total: 30 plugins
+- **[brianhuster/live-preview.nvim](https://github.com/brianhuster/live-preview.nvim)** – Browser previews for Markdown, math, and Mermaid
 
 **Note**: All plugins are managed via `lazy.nvim` with configuration split across modular files in `dot-config/nvim/lua/plugins/`. The plugin versions are locked in `dot-config/nvim/lazy-lock.json`.

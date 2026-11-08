@@ -21,8 +21,10 @@ return {
 					"rust_analyzer",
 					"protols",
 					"zls",
+					"yamlls"
 				},
 				automatic_installation = true,
+				automatic_enable = { exclude = { "vala_ls" } },
 			})
 
 			local hover_group = vim.api.nvim_create_augroup("LspHoverPreview", { clear = false })
@@ -43,7 +45,8 @@ return {
 				end
 				opts.focusable = false
 				opts.focus = false
-				opts.close_events = opts.close_events or { "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }
+				opts.close_events = opts.close_events or
+				{ "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }
 				return orig_open_floating_preview(contents, syntax, opts, ...)
 			end
 
@@ -101,53 +104,56 @@ return {
 				end
 
 				local function jump_to_highlight(direction)
-					local params = vim.lsp.util.make_position_params(nil, client.offset_encoding or "utf-16")
-					vim.lsp.buf_request_all(0, "textDocument/documentHighlight", params, function(responses)
-						local highlights = {}
-						for _, resp in pairs(responses) do
-							if resp.result then
-								for _, hl in ipairs(resp.result) do
-									local start = hl.range.start
-									table.insert(highlights, { start.line, start.character })
+					local params = vim.lsp.util.make_position_params(nil,
+						client.offset_encoding or "utf-16")
+					vim.lsp.buf_request_all(0, "textDocument/documentHighlight", params,
+						function(responses)
+							local highlights = {}
+							for _, resp in pairs(responses) do
+								if resp.result then
+									for _, hl in ipairs(resp.result) do
+										local start = hl.range.start
+										table.insert(highlights,
+											{ start.line, start.character })
+									end
 								end
 							end
-						end
-						if #highlights == 0 then
-							return
-						end
-						table.sort(highlights, function(a, b)
-							if a[1] == b[1] then
-								return a[2] < b[2]
+							if #highlights == 0 then
+								return
 							end
-							return a[1] < b[1]
+							table.sort(highlights, function(a, b)
+								if a[1] == b[1] then
+									return a[2] < b[2]
+								end
+								return a[1] < b[1]
+							end)
+
+							local cur = vim.api.nvim_win_get_cursor(0)
+							local cur_line = cur[1] - 1
+							local cur_col = cur[2]
+							local target
+
+							if direction == "next" then
+								for _, pos in ipairs(highlights) do
+									if pos[1] > cur_line or (pos[1] == cur_line and pos[2] > cur_col) then
+										target = pos
+										break
+									end
+								end
+								target = target or highlights[1]
+							else
+								for i = #highlights, 1, -1 do
+									local pos = highlights[i]
+									if pos[1] < cur_line or (pos[1] == cur_line and pos[2] < cur_col) then
+										target = pos
+										break
+									end
+								end
+								target = target or highlights[#highlights]
+							end
+
+							vim.api.nvim_win_set_cursor(0, { target[1] + 1, target[2] })
 						end)
-
-						local cur = vim.api.nvim_win_get_cursor(0)
-						local cur_line = cur[1] - 1
-						local cur_col = cur[2]
-						local target
-
-						if direction == "next" then
-							for _, pos in ipairs(highlights) do
-								if pos[1] > cur_line or (pos[1] == cur_line and pos[2] > cur_col) then
-									target = pos
-									break
-								end
-							end
-							target = target or highlights[1]
-						else
-							for i = #highlights, 1, -1 do
-								local pos = highlights[i]
-								if pos[1] < cur_line or (pos[1] == cur_line and pos[2] < cur_col) then
-									target = pos
-									break
-								end
-							end
-							target = target or highlights[#highlights]
-						end
-
-						vim.api.nvim_win_set_cursor(0, { target[1] + 1, target[2] })
-					end)
 				end
 
 				vim.keymap.set("n", "gn", function()
@@ -161,12 +167,14 @@ return {
 
 				if has_telescope then
 					vim.keymap.set("n", "gd", telescope.lsp_definitions, opts("Go to definition"))
-					vim.keymap.set("n", "gT", telescope.lsp_type_definitions, opts("Go to type definition"))
+					vim.keymap.set("n", "gT", telescope.lsp_type_definitions,
+						opts("Go to type definition"))
 					vim.keymap.set("n", "gi", telescope.lsp_implementations, opts("Implementation"))
 					vim.keymap.set("n", "gr", telescope.lsp_references, opts("References"))
 				else
 					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
-					vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, opts("Go to type definition"))
+					vim.keymap.set("n", "gT", vim.lsp.buf.type_definition,
+						opts("Go to type definition"))
 					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Implementation"))
 					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts("References"))
 				end
@@ -316,6 +324,22 @@ return {
 			-- Zig
 			vim.lsp.config("zls", with_defaults({}))
 
+			-- YAML
+			vim.lsp.config("yamlls", with_defaults({
+				settings = {
+					yaml = {
+						format = {
+							enable = true,
+							singleQuote = false,
+							bracketSpacing = true,
+						},
+						validate = true,
+						completion = true,
+						hover = true,
+					},
+				},
+			}))
+
 			-- Start servers (new API requires explicit enable)
 			vim.lsp.enable({
 				"lua_ls",
@@ -329,6 +353,7 @@ return {
 				"rust_analyzer",
 				"protols",
 				"zls",
+				"yamlls",
 			})
 		end,
 	},

@@ -42,12 +42,4 @@ return {
 			vim.cmd.colorscheme("kanagawa-wave")
 		end,
 	},
-
-	{
-		"LazyVim/LazyVim",
-		version = "15.15.0",
-		opts = {
-			colorscheme = "kanagawa-wave",
-		},
-	},
 }

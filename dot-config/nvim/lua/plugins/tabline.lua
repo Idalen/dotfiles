@@ -12,6 +12,9 @@ return {
         numbers = "none",         -- "ordinal" | "buffer_id" | "both" | function
         diagnostics = "nvim_lsp", -- show LSP diagnostics in the tabline
         diagnostics_update_in_insert = false,
+        custom_filter = function(bufnr)
+          return vim.bo[bufnr].buftype ~= "terminal"
+        end,
 
         --- Neo-tree integration: create a clean offset on the left
         offsets = {

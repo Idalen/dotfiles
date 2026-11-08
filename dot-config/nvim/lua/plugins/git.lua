@@ -34,7 +34,7 @@ return {
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles" },
 		keys = {
-			{ "<leader>gm", "<cmd>DiffviewOpen main...HEAD<CR>", desc = "Diff branch against main" },
+			{ "<leader>gm", "<cmd>DiffviewOpen<CR>", desc = "Diff uncommitted changes" },
 		},
 		config = function()
 			local dv = require("diffview")

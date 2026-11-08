@@ -80,3 +80,6 @@ if [[ -f "$HOME/.local/bin/env" ]]; then
     . "$HOME/.local/bin/env"
 fi
 alias pod="ssh danielvieira.devpod-bra"
+
+# Created by `pipx` on 2026-09-26 19:43:17
+export PATH="$PATH:/home/damv/.local/bin"
