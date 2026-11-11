@@ -313,11 +313,14 @@ return {
 			vim.lsp.config("rust_analyzer", with_defaults({
 				settings = {
 					["rust-analyzer"] = {
+						cargo = {
+							-- Avoid contention with builds running in the terminal.
+							targetDir = true,
+						},
 						checkOnSave = true,
 						diagnostics = {
 							enable = true,
-							-- Additional live checks; these can produce false positives.
-							experimental = { enable = true },
+							experimental = { enable = false },
 						},
 					},
 				},
