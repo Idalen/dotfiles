@@ -10,6 +10,7 @@ vim.opt.scrolloff = 12
 vim.opt.updatetime = 250
 
 vim.diagnostic.config({
+	update_in_insert = true,
 	virtual_text = {
 		spacing = 2,
 		prefix = "●",

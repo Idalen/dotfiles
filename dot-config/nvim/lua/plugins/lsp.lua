@@ -314,6 +314,11 @@ return {
 				settings = {
 					["rust-analyzer"] = {
 						checkOnSave = true,
+						diagnostics = {
+							enable = true,
+							-- Additional live checks; these can produce false positives.
+							experimental = { enable = true },
+						},
 					},
 				},
 			}))
