@@ -12,6 +12,25 @@ return {
 
 		telescope.setup({
 			defaults = {
+				get_selection_window = function(picker)
+					local function is_code_window(win)
+						return vim.api.nvim_win_is_valid(win)
+							and vim.api.nvim_win_get_config(win).relative == ""
+							and vim.bo[vim.api.nvim_win_get_buf(win)].buftype == ""
+					end
+
+					if is_code_window(picker.original_win_id) then
+						return picker.original_win_id
+					end
+					-- Keep results out of sidebars that redirect file opens.
+					for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+						if is_code_window(win) then
+							return win
+						end
+					end
+					vim.cmd("botright vnew")
+					return vim.api.nvim_get_current_win()
+				end,
 				wrap_results = true,
 				layout_strategy = "horizontal",
 				layout_config = {
