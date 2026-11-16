@@ -2,6 +2,17 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
+			{
+				"j-hui/fidget.nvim",
+				opts = {
+					progress = {
+						display = {
+							render_limit = 3,
+							done_ttl = 3,
+						},
+					},
+				},
+			},
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"SmiteshP/nvim-navic",
