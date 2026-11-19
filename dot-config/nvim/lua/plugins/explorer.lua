@@ -9,6 +9,7 @@ return {
 		},
 		config = function()
 			local events = require("neo-tree.events")
+			local sidebar_width = 32
 			require("neo-tree").setup({
 				sort_function = function(a, b)
 					-- Always put directories before files (optional)
@@ -30,7 +31,7 @@ return {
 				end,
 				window = {
 					position = "left",
-					width = 32,
+					width = sidebar_width,
 					mappings = {
 						["o"] = "open",
 					}
@@ -51,6 +52,33 @@ return {
 					"<cmd>ExplorerHere<CR>",
 					{ desc = "File explorer (focus current file)" }
 				)
+			})
+
+			events.subscribe({
+				event = events.NEO_TREE_WINDOW_AFTER_OPEN,
+				handler = function(args)
+					if args.position == "left" or args.position == "right" then
+						vim.wo[args.winid].winfixwidth = true
+					end
+				end,
+			})
+
+			vim.api.nvim_create_autocmd("BufWinEnter", {
+				group = vim.api.nvim_create_augroup("NeoTreeSidebarWidth", { clear = true }),
+				callback = function(args)
+					local editor = vim.api.nvim_get_current_win()
+					if vim.bo[args.buf].buftype ~= "" or vim.api.nvim_win_get_config(editor).relative ~= "" then
+						return
+					end
+
+					for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+						local buf = vim.api.nvim_win_get_buf(win)
+						if vim.bo[buf].filetype == "neo-tree" and vim.wo[win].winfixwidth
+							and vim.api.nvim_win_get_width(win) > sidebar_width then
+							vim.api.nvim_win_set_width(win, sidebar_width)
+						end
+					end
+				end,
 			})
 
 			events.subscribe({
